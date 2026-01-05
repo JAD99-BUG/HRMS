@@ -1,0 +1,10 @@
+{
+  "name": "hrms-application",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "cd server && yarn install",
+    "start": "cd server && yarn start"
+  }
+}
+
