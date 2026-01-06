@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "postinstall": "cd server && yarn install",
-    "start": "cd server && yarn start"
+    "postinstall": "cd server && npm install",
+    "start": "cd server && npm start"
   }
 }
-
