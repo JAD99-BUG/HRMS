@@ -29,9 +29,29 @@ app.get('/', (req, res) => {
   res.send('HRMS Backend API is running. Access endpoints at /api');
 });
 
+app.get('/api', (req, res) => {
+  res.json({
+    message: 'HRMS API Root',
+    endpoints: [
+      '/api/auth/login',
+      '/api/health',
+      '/api/employees',
+      '/api/departments',
+      '/api/attendance',
+      '/api/payroll',
+      '/api/leave',
+      '/api/users',
+      '/api/dashboard',
+      '/api/reports',
+      '/api/positions'
+    ]
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'UP', timestamp: new Date() });
 });
+
 
 app.use('/api/employees', employeeRoutes);
 app.use('/api/departments', departmentRoutes);
@@ -50,8 +70,10 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
+  console.log('Testing database connection...');
   try {
     const res = await pool.query('SELECT NOW()');
+
     console.log('✅ Database connected successfully at:', res.rows[0].now);
   } catch (err) {
     console.error('❌ Database connection failed:', err.message);
