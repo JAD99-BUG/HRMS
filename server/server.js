@@ -7,6 +7,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  next();
+});
+
+
 const employeeRoutes = require('./routes/employees');
 const departmentRoutes = require('./routes/departments');
 const attendanceRoutes = require('./routes/attendance');
@@ -17,6 +24,14 @@ const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard');
 const reportsRoutes = require('./routes/reports');
 const positionsRoutes = require('./routes/positions');
+
+app.get('/', (req, res) => {
+  res.send('HRMS Backend API is running. Access endpoints at /api');
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'UP', timestamp: new Date() });
+});
 
 app.use('/api/employees', employeeRoutes);
 app.use('/api/departments', departmentRoutes);
@@ -29,9 +44,18 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/reports', reportsRoutes);
 app.use('/api/positions', positionsRoutes);
 
+const pool = require('./db/connection');
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
+  try {
+    const res = await pool.query('SELECT NOW()');
+    console.log('✅ Database connected successfully at:', res.rows[0].now);
+  } catch (err) {
+    console.error('❌ Database connection failed:', err.message);
+  }
 });
+
 
